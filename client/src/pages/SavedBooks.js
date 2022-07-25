@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
-import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  // Setup to use removeBook mutation and error
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  // Setup to use removeBook mutation
+  const [removeBook] = useMutation(REMOVE_BOOK);
 
   // Setup to query for the user savedBooks from getMe
-  const { loading, data } =  useQuery(GET_ME)
+  const { loading, data } =  useQuery(GET_ME);
 
   // Set the data to the 'me' return or an empty object if no match
   const userData = data?.me || {};
 
+  console.log(userData);
+
   // Return this if loading
   if (loading) {
-    return <div>Loading...</div>;
+    return <h2>Loading...</h2>;
   }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -41,11 +42,6 @@ const SavedBooks = () => {
       console.error(err);
     }
   };
-
-  // // if data isn't here yet, say so
-  // if (!userDataLength) {
-  //   return <h2>LOADING...</h2>;
-  // }
 
   return (
     <>
@@ -72,7 +68,6 @@ const SavedBooks = () => {
                   <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
                     Delete this Book!
                   </Button>
-                  {error && <div>Unable to remove book</div>}
                 </Card.Body>
               </Card>
             );
