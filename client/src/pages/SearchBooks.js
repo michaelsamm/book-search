@@ -68,8 +68,6 @@ const SearchBooks = () => {
       return false;
     }
 
-    console.log(bookToSave);
-
     try {
       await saveBook({
         variables: { bookData: { ...bookToSave } } }
